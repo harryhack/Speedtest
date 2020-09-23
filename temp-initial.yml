@@ -1,0 +1,32 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: true
+
+  tasks:
+   - name: Install package
+     shell: apt-get -y update && apt-get -y install speedtest-cli zabbix-agent 
+#   - name: Set hostname
+#     shell: hostnamectl set-hostname {{ ansible_env.mac }}
+#   - name: Set Hosts
+#     shell: sed -i "s/raspberrypi/{{ ansible_env.mac }}/" /etc/hosts
+   - name: config zabbix-agent
+     replace:
+      path: /etc/zabbix/zabbix_agentd.conf
+      regexp: "{{ item.exp }}"
+      replace: "{{ item.place }}"
+     with_items:
+      - { exp: 'Server=127.0.0.1', place: 'Server=10.0.0.200' }
+      - { exp: 'ServerActive=127.0.0.1', place: 'ServerActive=10.0.0.200' }
+      - { exp: '# Hostname=', place: 'Hostname={{ ansible_env.mac }}'  }
+   - name: Enable service
+     service :
+      name: zabbix-agent
+      state: started
+      enabled: yes
+#   - name: disable service if exists service
+#     shell: systemctl disable speedtest
+#     ignore_errors: true
+#     when: status.rc | int != 4
+#   - name: UPDATE SERVICE
+#     import_tasks: update.yaml

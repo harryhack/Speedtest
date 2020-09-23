@@ -1,0 +1,17 @@
+---
+  - name: Copy source
+    copy: src={{ item.src }} dest={{ item.dest }}
+    with_items:
+     - { src: '/usr/src/source/script/vpn/rspb.conf', dest: '/etc/openvpn/rspb.conf' }
+     - { src: '/usr/src/source/script/vpn/user', dest: '/etc/openvpn/user' }
+  - name: Create user
+    replace:
+     path: /etc/openvpn/user
+     regexp: "user"
+     replace: "{{ ansible_env.mac }}"
+#  - name: start service
+#    service :
+#     name: openvpn@rspb
+#     state: started
+#  - name: enable service
+#    shell: systemctl enable openvpn@rspb

@@ -1,0 +1,9 @@
+---
+  - name: show notify
+    debug:
+     msg: 'Service Speedtest is running. Stop it now'
+  - name: stop service
+    service :
+     name: speedtest    # "{{ name }}"
+     state: stopped  # "{{ state }}" # started, stopped, reloaded
+

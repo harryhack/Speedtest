@@ -1,0 +1,29 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: true
+#  vars:
+#   mac: "{{ lookup('ansible_env','HOSTNAME', host=all)  }}"
+  tasks:
+#  - name: Copy source
+#    copy: src={{ item.src }} dest={{ item.dest }}
+#    with_items:
+#     - { src: '/usr/src/source/script/vpn/rspb.conf', dest: '/usr/src/source/script/vpn/rspb.conf' }
+#     - { src: '/usr/src/source/script/vpn/user', dest: '/usr/src/source/script/vpn/user' }
+#  - name: Create user
+#    replace:
+#     path: /usr/src/source/script/vpn/user
+#     regexp: "user"
+#     replace: "{{ ansible_env.mac }}"
+#  - name: enable service
+#    shell: systemctl enable openvpn@rspb
+#  - name: reload daemon
+#    systemd:
+#     daemon_reload: yes
+#  - name: start service
+#    service :
+#     name: openvpn@rspb
+#     state: started
+   - name: Remote server ansible variables
+     debug:
+      msg: "{{ ansible_eth0.macaddress }}"

@@ -1,0 +1,30 @@
+  - name: copy script
+    copy:
+     src: /usr/src/source/script/speedtest/speedtest_{{version}}.sh
+     dest: /etc/zabbix/speedtest_{{version}}.sh
+     mode: 0755
+  - name: copy service
+    copy:
+     src: /usr/src/source/script/speedtest/speedtest.service
+     dest: /etc/zabbix/speedtest.service
+     mode: 0755
+  - name: edit time run in service
+    replace:
+     path: /etc/zabbix/speedtest.service
+     regexp: "{{ item.regexp1 }}"
+     replace: "{{ item.replace }}"
+    with_items:
+     - { regexp1: 'version', replace: '{{version}}' }
+     - { regexp1: 'time', replace: '{{time}}' }
+     - { regexp1: 'speedon', replace: '{{speedon}}' }
+  - name: enable service
+    shell: systemctl enable /etc/zabbix/speedtest.service
+  - name: reload daemon
+    systemd:
+     daemon_reload: yes
+  - name: start service
+    service :
+     name: speedtest
+     state: started
+#     enabled: yes
+

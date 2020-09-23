@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: false
+
+  tasks:
+   - name: check service status
+     shell: systemctl status speedtest
+     ignore_errors: true
+     register: status
+
+   - name: stop if running
+     import_tasks: stop.yaml
+     when: status.rc | int == 0
+
+   - name: disable service if exists service
+     shell: systemctl disable speedtest
+     ignore_errors: true
+     when: status.rc | int != 4
+
+   - name: UPDATE SERVICE
+     import_tasks: update.yaml

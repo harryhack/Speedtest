@@ -1,0 +1,15 @@
+---
+  - name: show notify
+    debug:
+     msg: 'Create env mac of eth0 RSPB'
+  - name: Processing...
+    script: /usr/src/source/script/other/getmac.sh
+  - name: make virtual environment
+    shell: source /root/.bashrc
+    args:
+     executable: /bin/bash
+  - name: Check env mac created
+    shell: printenv | grep mac
+    register: macx
+  - debug: 
+     msg: "{{macx.stdout_lines}}"

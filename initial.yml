@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: true
+
+  tasks:
+   - name: Install package
+     shell: apt-get -y update && apt-get -y install speedtest-cli zabbix-agent 
+   - name: Config zabbix-agent
+     replace:
+      path: /etc/zabbix/zabbix_agentd.conf
+      regexp: "{{ item.exp }}"
+      replace: "{{ item.place }}"
+     with_items:
+      - { exp: 'Server=127.0.0.1', place: 'Server=10.0.0.200' }
+      - { exp: 'ServerActive=127.0.0.1', place: 'ServerActive=10.0.0.200' }
+      - { exp: '# Hostname=', place: 'Hostname={{ ansible_env.mac }}'  }
+   - name: Enable zabbix-agent
+     service :
+      name: zabbix-agent
+      state: restarted
+      enabled: yes
